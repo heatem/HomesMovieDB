@@ -28,6 +28,9 @@ class MovieTableViewCell: UITableViewCell {
     
     func set(movie: Movie) {
         movieImageView.image = UIImage(named: "TMDB_logo")
+        if let posterPath = movie.poster_path {
+            setImage(from: posterPath)
+        }
         movieTitleLabel.text = movie.title
     }
 
@@ -48,5 +51,15 @@ class MovieTableViewCell: UITableViewCell {
         movieTitleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
         movieTitleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16).isActive = true
         movieTitleLabel.heightAnchor.constraint(equalToConstant: 80).isActive = true
+    }
+    
+    func setImage(from posterPath: String) {
+        getPoster(from: posterPath) { (imageData) in
+            if let data = imageData {
+                DispatchQueue.main.async {
+                    self.movieImageView.image = UIImage(data: data)
+                }
+            }
+        }
     }
 }
