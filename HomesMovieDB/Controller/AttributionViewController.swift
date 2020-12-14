@@ -28,6 +28,7 @@ class AttributionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.backgroundColor = .systemBackground
         view.addSubview(tmdbImageView)
         view.addSubview(dataSourceLabel)
         

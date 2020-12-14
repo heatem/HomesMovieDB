@@ -9,17 +9,52 @@ import UIKit
 
 class MovieTableViewCell: UITableViewCell {
     
-    var movieImageView = UIImageView()
-    var movieTitleLabel = UILabel()
+    var movieImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "TMDB_logo")
+        // TODO: Do I need this?
+        imageView.clipsToBounds = true
+        return imageView
+    }()
+    
+    var movieTitleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.preferredFont(forTextStyle: .headline)
+//        label.font = UIFont.boldSystemFont(ofSize: 20)
+        return label
+    }()
+    
+    // TODO: small release date | popularity score
+    // TODO: Format date
+    var dateScoreLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.preferredFont(forTextStyle: .footnote)
+        return label
+    }()
+    
+    // TODO: default sized Overview
+    var overviewLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.preferredFont(forTextStyle: .body)
+        label.lineBreakMode = .byWordWrapping
+        label.lineBreakMode = .byTruncatingTail
+        label.numberOfLines = 3
+        return label
+    }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         addSubview(movieImageView)
         addSubview(movieTitleLabel)
+        addSubview(dateScoreLabel)
+        addSubview(overviewLabel)
         
         configureImageView()
         configureTitleLabel()
+        configureDateScoreLabel()
+        configureOverviewLabel()
     }
     
     required init?(coder: NSCoder) {
@@ -27,19 +62,31 @@ class MovieTableViewCell: UITableViewCell {
     }
     
     func set(movie: Movie) {
-        movieImageView.image = UIImage(named: "TMDB_logo")
         if let posterPath = movie.poster_path {
-            setImage(from: posterPath)
+            getPoster(from: posterPath) { (imageData) in
+                if let data = imageData {
+                    DispatchQueue.main.async {
+                        self.movieImageView.image = UIImage(data: data)
+                    }
+                }
+            }
         }
         movieTitleLabel.text = movie.title
+        let releaseDate = movie.release_date ?? ""
+        if let voteAverage = movie.vote_average {
+            dateScoreLabel.text = "\(releaseDate) | Score: \(voteAverage)"
+        } else {
+            dateScoreLabel.text = releaseDate
+        }
+        overviewLabel.text = movie.overview
     }
 
     func configureImageView() {
         movieImageView.translatesAutoresizingMaskIntoConstraints = false
         movieImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
         movieImageView.topAnchor.constraint(equalTo: topAnchor, constant: 16).isActive = true
-        movieImageView.heightAnchor.constraint(equalToConstant: 80).isActive = true
-        movieImageView.widthAnchor.constraint(equalTo: movieImageView.heightAnchor, multiplier: 16/9).isActive = true
+        movieImageView.heightAnchor.constraint(equalToConstant: 108).isActive = true
+        movieImageView.widthAnchor.constraint(lessThanOrEqualTo: movieImageView.heightAnchor, multiplier: 2/3).isActive = true
     }
     
     func configureTitleLabel() {
@@ -50,16 +97,19 @@ class MovieTableViewCell: UITableViewCell {
         movieTitleLabel.leadingAnchor.constraint(equalTo: movieImageView.trailingAnchor, constant: 16).isActive = true
         movieTitleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
         movieTitleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16).isActive = true
-        movieTitleLabel.heightAnchor.constraint(equalToConstant: 80).isActive = true
     }
     
-    func setImage(from posterPath: String) {
-        getPoster(from: posterPath) { (imageData) in
-            if let data = imageData {
-                DispatchQueue.main.async {
-                    self.movieImageView.image = UIImage(data: data)
-                }
-            }
-        }
+    func configureDateScoreLabel() {
+        dateScoreLabel.translatesAutoresizingMaskIntoConstraints = false
+        dateScoreLabel.leadingAnchor.constraint(equalTo: movieImageView.trailingAnchor, constant: 16).isActive = true
+        dateScoreLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
+        dateScoreLabel.topAnchor.constraint(equalTo: movieTitleLabel.bottomAnchor, constant: 6).isActive = true
+    }
+    
+    func configureOverviewLabel() {
+        overviewLabel.translatesAutoresizingMaskIntoConstraints = false
+        overviewLabel.leadingAnchor.constraint(equalTo: movieImageView.trailingAnchor, constant: 16).isActive = true
+        overviewLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
+        overviewLabel.topAnchor.constraint(equalTo: dateScoreLabel.bottomAnchor, constant: 6).isActive = true
     }
 }
