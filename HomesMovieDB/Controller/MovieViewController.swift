@@ -16,7 +16,6 @@ class MovieViewController: UIViewController {
         let view = UIScrollView()
         // TODO: Make this dynamic
         view.contentSize.height = 1000
-        view.backgroundColor = .lightGray
         return view
     }()
         
