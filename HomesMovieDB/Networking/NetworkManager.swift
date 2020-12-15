@@ -17,7 +17,6 @@ func getMovieList(by sort: String, completionHandler: @escaping ([Movie]) -> Voi
         }
         
         guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
-            // TODO: Handle networking error to show something useful
             print("Unexpected status code: \(String(describing: response))")
             return
         }
@@ -41,7 +40,6 @@ func getMovie(with id: Int, completionHandler: @escaping (Movie) -> Void) {
         }
         
         guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
-            // TODO: Handle networking error to show something useful
             print("Unexpected status code: \(String(describing: response))")
             return
         }
@@ -54,23 +52,6 @@ func getMovie(with id: Int, completionHandler: @escaping (Movie) -> Void) {
     task.resume()
 }
 
-/*
- func fetchImage(from urlString: String, completionHandler: @escaping (_ data: Data?) -> ()) {
-     let session = URLSession.shared
-     let url = URL(string: image_url)
-         
-     let dataTask = session.dataTask(with: url!) { (data, response, error) in
-         if error != nil {
-             print("Error fetching the image! 😢")
-             completionHandler(nil)
-         } else {
-             completionHandler(data)
-         }
-     }
-         
-     dataTask.resume()
- }
- */
 func getPoster(from posterPath: String, completionHandler: @escaping (_ data: Data?) -> ()) {
     guard let url = URL(string: "https://image.tmdb.org/t/p/w500\(posterPath)") else { return }
     let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
@@ -84,26 +65,3 @@ func getPoster(from posterPath: String, completionHandler: @escaping (_ data: Da
     
     task.resume()
 }
-
-//
-//
-//    let task = URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
-//        if let error = error {
-//            print("Error fetching image: \(error)")
-//            return
-//        }
-//
-//        guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
-//            // TODO: Handle networking error to show something useful
-//            print("Unexpected status code: \(String(describing: response))")
-//            return
-//        }
-//
-//        if let data = data {
-//            print(data)
-//            completionHandler()
-//        }
-//    })
-//
-//    task.resume()
-//}

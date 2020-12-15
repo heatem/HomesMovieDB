@@ -18,14 +18,13 @@ class MovieTableViewCell: UITableViewCell {
         return imageView
     }()
     
+    // TODO: adjust things based on title length
     var movieTitleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.preferredFont(forTextStyle: .headline)
-//        label.font = UIFont.boldSystemFont(ofSize: 20)
         return label
     }()
     
-    // TODO: small release date | popularity score
     // TODO: Format date
     var dateScoreLabel: UILabel = {
         let label = UILabel()
@@ -33,7 +32,6 @@ class MovieTableViewCell: UITableViewCell {
         return label
     }()
     
-    // TODO: default sized Overview
     var overviewLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.preferredFont(forTextStyle: .body)
