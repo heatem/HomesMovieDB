@@ -11,19 +11,37 @@ class ViewController: UIViewController {
     let attributionVC = AttributionViewController()
     var movies: [Movie]?
     let movieTableView = UITableView()
+    
+    let sortLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.preferredFont(forTextStyle: .subheadline)
+        label.text = "Sort: "
+        return label
+    }()
+    
+    let sortControl: UISegmentedControl = {
+        let options = ["Top Rated", "Popular"]
+        let segmentedControl = UISegmentedControl(items: options)
+        segmentedControl.backgroundColor = .systemBackground
+        segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.addTarget(self, action: #selector(segmentControl(_:)), for: .valueChanged)
+        return segmentedControl
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        view.backgroundColor = .systemBackground
         title = "Top Rated Movies"
         self.navigationController?.navigationBar.isTranslucent = false
         let infoButton = UIBarButtonItem(title: "Info", style: .plain, target: self, action: #selector(showAttribution))
         navigationItem.rightBarButtonItem = infoButton
+
+        sortMovies(by: "top_rated")
         
+        view.addSubview(sortLabel)
+        view.addSubview(sortControl)
         configureTableView()
         installConstraints()
-        
-        sortMovies(by: "top_rated")
     }
     
     func configureTableView() {
@@ -37,19 +55,41 @@ class ViewController: UIViewController {
     
     func installConstraints() {
         // TODO: look at Pinning function at minute 8 in https://www.youtube.com/watch?v=bXHinfFMkFw
+        sortLabel.translatesAutoresizingMaskIntoConstraints = false
+        sortLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 2).isActive = true
+        sortLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8).isActive = true
+        sortLabel.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        sortLabel.heightAnchor.constraint(equalTo: sortControl.heightAnchor).isActive = true
+        
+        sortControl.translatesAutoresizingMaskIntoConstraints = false
+        sortControl.topAnchor.constraint(equalTo: view.topAnchor, constant: 2).isActive = true
+        sortControl.leadingAnchor.constraint(equalTo: sortLabel.trailingAnchor, constant: 8).isActive = true
+        sortControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8).isActive = true
+        
         movieTableView.translatesAutoresizingMaskIntoConstraints = false
         movieTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         movieTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        movieTableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        movieTableView.topAnchor.constraint(equalTo: sortLabel.bottomAnchor).isActive = true
         movieTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
     
-    @objc func sortMovies(by order: String) {
+    func sortMovies(by order: String) {
         getMovieList(by: order) { [weak self] (movies) in
             self?.movies = movies
             DispatchQueue.main.async {
                 self?.movieTableView.reloadData()
             }
+        }
+    }
+    
+    @objc func segmentControl(_ segmentedControl: UISegmentedControl) {
+        switch sortControl.selectedSegmentIndex {
+        case 0:
+            sortMovies(by: "top_rated")
+            title = "Top Rated"
+        default:
+            sortMovies(by: "popular")
+            title = "Popular"
         }
     }
     
