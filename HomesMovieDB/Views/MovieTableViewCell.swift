@@ -8,7 +8,6 @@
 import UIKit
 
 class MovieTableViewCell: UITableViewCell {
-    
     var movieImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -70,7 +69,7 @@ class MovieTableViewCell: UITableViewCell {
             }
         }
         movieTitleLabel.text = movie.title
-        let releaseDate = movie.release_date ?? ""
+        let releaseDate = movie.release_date ?? "Date Not Available"
         if let voteAverage = movie.vote_average {
             dateScoreLabel.text = "\(releaseDate) | Score: \(voteAverage)"
         } else {
