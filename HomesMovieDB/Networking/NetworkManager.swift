@@ -65,3 +65,27 @@ func getPoster(from posterPath: String, completionHandler: @escaping (_ data: Da
     
     task.resume()
 }
+
+func getSearchResults(from searchTerm: String, completionHandler: @escaping ([Movie]) -> Void) {
+    let url = URL(string: "https://api.themoviedb.org/3/search/multi?api_key=\(TMDB_KEY)&language=en-US&query=\(searchTerm)&page=1&include_adult=false")
+    
+    guard let validUrl = url else { return }
+    
+    let task = URLSession.shared.dataTask(with: validUrl, completionHandler: { (data, response, error) in
+        if let error = error {
+            print("Error fetching list: \(error)")
+            return
+        }
+        
+        guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
+            print("Unexpected status code: \(String(describing: response))")
+            return
+        }
+        
+        if let data = data, let movies = try? JSONDecoder().decode(Movies.self, from: data) {
+            completionHandler(movies.results)
+        }
+    })
+    
+    task.resume()
+}

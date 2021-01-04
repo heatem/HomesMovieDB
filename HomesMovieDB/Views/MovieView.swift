@@ -8,7 +8,6 @@
 import UIKit
 
 class MovieView: UIView {
-
     var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit

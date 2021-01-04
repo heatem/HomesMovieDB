@@ -11,6 +11,7 @@ class ViewController: UIViewController {
     let attributionVC = AttributionViewController()
     var movies: [Movie]?
     let movieTableView = UITableView()
+    var showSearchResults = false
     
     let sortLabel: UILabel = {
         let label = UILabel()
@@ -27,17 +28,27 @@ class ViewController: UIViewController {
         segmentedControl.addTarget(self, action: #selector(segmentControl(_:)), for: .valueChanged)
         return segmentedControl
     }()
+    
+    let searchBar: UISearchBar = {
+        let bar = UISearchBar()
+        bar.showsCancelButton = true
+        return bar
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.backgroundColor = .systemBackground
         title = "Top Rated Movies"
         self.navigationController?.navigationBar.isTranslucent = false
         let infoButton = UIBarButtonItem(title: "Info", style: .plain, target: self, action: #selector(showAttribution))
         navigationItem.rightBarButtonItem = infoButton
 
+        searchBar.delegate = self
+
         sortMovies(by: "top_rated")
         
+        view.addSubview(searchBar)
         view.addSubview(sortLabel)
         view.addSubview(sortControl)
         configureTableView()
@@ -55,25 +66,31 @@ class ViewController: UIViewController {
     
     func installConstraints() {
         // TODO: look at Pinning function at minute 8 in https://www.youtube.com/watch?v=bXHinfFMkFw
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+
         sortLabel.translatesAutoresizingMaskIntoConstraints = false
-        sortLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 2).isActive = true
-        sortLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8).isActive = true
+        sortLabel.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 8).isActive = true
+        sortLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
         sortLabel.widthAnchor.constraint(equalToConstant: 40).isActive = true
         sortLabel.heightAnchor.constraint(equalTo: sortControl.heightAnchor).isActive = true
         
         sortControl.translatesAutoresizingMaskIntoConstraints = false
-        sortControl.topAnchor.constraint(equalTo: view.topAnchor, constant: 2).isActive = true
-        sortControl.leadingAnchor.constraint(equalTo: sortLabel.trailingAnchor, constant: 8).isActive = true
-        sortControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8).isActive = true
+        sortControl.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 8).isActive = true
+        sortControl.leadingAnchor.constraint(equalTo: sortLabel.trailingAnchor, constant: 16).isActive = true
+        sortControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
         
         movieTableView.translatesAutoresizingMaskIntoConstraints = false
         movieTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         movieTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        movieTableView.topAnchor.constraint(equalTo: sortLabel.bottomAnchor).isActive = true
+        movieTableView.topAnchor.constraint(equalTo: sortLabel.bottomAnchor, constant: 8).isActive = true
         movieTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
     
     func sortMovies(by order: String) {
+        searchBar.text = ""
         getMovieList(by: order) { [weak self] (movies) in
             self?.movies = movies
             DispatchQueue.main.async {
@@ -121,5 +138,24 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             cell.set(movie: movie)
         }
         return cell
+    }
+}
+
+extension ViewController: UISearchBarDelegate {
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if let searchTerm = searchBar.text {
+            title = "Searched: \(searchTerm)"
+            getSearchResults(from: searchTerm.replacingOccurrences(of: " ", with: "%20"), completionHandler: { [weak self] (movies) in
+                self?.movies = movies
+                DispatchQueue.main.async {
+                    self?.movieTableView.reloadData()
+                }
+            })
+        }
     }
 }
