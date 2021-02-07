@@ -8,10 +8,10 @@
 import UIKit
 
 class ViewController: UIViewController {
+    let defaults: UserDefaults = UserDefaults.standard
     let attributionVC = AttributionViewController()
     var movies: [Movie]?
     let movieTableView = UITableView()
-    var showSearchResults = false
     
     let sortLabel: UILabel = {
         let label = UILabel()
@@ -24,7 +24,6 @@ class ViewController: UIViewController {
         let options = ["Top Rated", "Popular"]
         let segmentedControl = UISegmentedControl(items: options)
         segmentedControl.backgroundColor = .systemBackground
-        segmentedControl.selectedSegmentIndex = 0
         segmentedControl.addTarget(self, action: #selector(segmentControl(_:)), for: .valueChanged)
         return segmentedControl
     }()
@@ -38,15 +37,23 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if let titleFromDefaults = defaults.string(forKey: "Title"),
+           let sortFromDefaults = defaults.string(forKey: "Sort") {
+            title = titleFromDefaults
+            sortMovies(by: sortFromDefaults)
+            sortControl.selectedSegmentIndex = defaults.integer(forKey: "SortControlIndex")
+        } else {
+            title = "Top Rated Movies"
+            sortMovies(by: "top_rated")
+            sortControl.selectedSegmentIndex = 0
+        }
+        
         view.backgroundColor = .systemBackground
-        title = "Top Rated Movies"
         self.navigationController?.navigationBar.isTranslucent = false
         let infoButton = UIBarButtonItem(title: "Info", style: .plain, target: self, action: #selector(showAttribution))
         navigationItem.rightBarButtonItem = infoButton
 
         searchBar.delegate = self
-
-        sortMovies(by: "top_rated")
         
         view.addSubview(searchBar)
         view.addSubview(sortLabel)
@@ -103,10 +110,16 @@ class ViewController: UIViewController {
         switch sortControl.selectedSegmentIndex {
         case 0:
             sortMovies(by: "top_rated")
-            title = "Top Rated"
+            title = "Top Rated Movies"
+            defaults.set("Top Rated Movies", forKey: "Title")
+            defaults.set("top_rated", forKey: "Sort")
+            defaults.set(0, forKey: "SortControlIndex")
         default:
             sortMovies(by: "popular")
-            title = "Popular"
+            title = "Popular Movies"
+            defaults.set("Popular Movies", forKey: "Title")
+            defaults.set("popular", forKey: "Sort")
+            defaults.set(1, forKey: "SortControlIndex")
         }
     }
     
