@@ -37,6 +37,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // TODO: Show previous view
         if let titleFromDefaults = defaults.string(forKey: "Title"),
            let sortFromDefaults = defaults.string(forKey: "Sort") {
             title = titleFromDefaults
