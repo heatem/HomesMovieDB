@@ -10,6 +10,7 @@ import UIKit
 class ViewController: UIViewController {
     let defaults: UserDefaults = UserDefaults.standard
     let attributionVC = AttributionViewController()
+    let searchVC = SearchViewController()
     var movies: [Movie]?
     let movieTableView = UITableView()
     
@@ -26,12 +27,6 @@ class ViewController: UIViewController {
         segmentedControl.backgroundColor = .systemBackground
         segmentedControl.addTarget(self, action: #selector(segmentControl(_:)), for: .valueChanged)
         return segmentedControl
-    }()
-    
-    let searchBar: UISearchBar = {
-        let bar = UISearchBar()
-        bar.showsCancelButton = true
-        return bar
     }()
 
     override func viewDidLoad() {
@@ -51,12 +46,11 @@ class ViewController: UIViewController {
         
         view.backgroundColor = .systemBackground
         self.navigationController?.navigationBar.isTranslucent = false
-        let infoButton = UIBarButtonItem(title: "Info", style: .plain, target: self, action: #selector(showAttribution))
+        let infoButton = UIBarButtonItem(title: "ℹ︎", style: .plain, target: self, action: #selector(showAttribution))
         navigationItem.rightBarButtonItem = infoButton
+        let searchButton = UIBarButtonItem(title: "Search", style: .plain, target: self, action: #selector(showSearch))
+        navigationItem.leftBarButtonItem = searchButton
 
-        searchBar.delegate = self
-        
-        view.addSubview(searchBar)
         view.addSubview(sortLabel)
         view.addSubview(sortControl)
         configureTableView()
@@ -73,20 +67,14 @@ class ViewController: UIViewController {
     }
     
     func installConstraints() {
-        // TODO: look at Pinning function at minute 8 in https://www.youtube.com/watch?v=bXHinfFMkFw
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
-        searchBar.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-
         sortLabel.translatesAutoresizingMaskIntoConstraints = false
-        sortLabel.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 8).isActive = true
+        sortLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 8).isActive = true
         sortLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
         sortLabel.widthAnchor.constraint(equalToConstant: 40).isActive = true
         sortLabel.heightAnchor.constraint(equalTo: sortControl.heightAnchor).isActive = true
         
         sortControl.translatesAutoresizingMaskIntoConstraints = false
-        sortControl.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 8).isActive = true
+        sortControl.topAnchor.constraint(equalTo: view.topAnchor, constant: 8).isActive = true
         sortControl.leadingAnchor.constraint(equalTo: sortLabel.trailingAnchor, constant: 16).isActive = true
         sortControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
         
@@ -98,7 +86,6 @@ class ViewController: UIViewController {
     }
     
     func sortMovies(by order: String) {
-        searchBar.text = ""
         getMovieList(by: order) { [weak self] (movies) in
             self?.movies = movies
             DispatchQueue.main.async {
@@ -126,6 +113,10 @@ class ViewController: UIViewController {
     
     @objc func showAttribution() {
         self.navigationController?.pushViewController(attributionVC, animated: false)
+    }
+    
+    @objc func showSearch() {
+        self.navigationController?.pushViewController(searchVC, animated: false)
     }
 }
 

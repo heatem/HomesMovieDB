@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AE5B47F825D7291900708C9F /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5B47F725D7291900708C9F /* SearchViewController.swift */; };
 		AE6BA0EF258185190021AE04 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6BA0EE258185190021AE04 /* AppDelegate.swift */; };
 		AE6BA0F1258185190021AE04 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6BA0F0258185190021AE04 /* SceneDelegate.swift */; };
 		AE6BA0F3258185190021AE04 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6BA0F2258185190021AE04 /* ViewController.swift */; };
@@ -41,6 +42,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AE5B47F725D7291900708C9F /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		AE6BA0EB258185190021AE04 /* HomesMovieDB.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HomesMovieDB.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE6BA0EE258185190021AE04 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AE6BA0F0258185190021AE04 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -174,6 +176,7 @@
 				AE6BA13C2581867D0021AE04 /* AttributionViewController.swift */,
 				AEE1AD7D25859033008EEC33 /* MovieViewController.swift */,
 				AE6BA0F2258185190021AE04 /* ViewController.swift */,
+				AE5B47F725D7291900708C9F /* SearchViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -308,6 +311,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AE6BA123258185450021AE04 /* NetworkManager.swift in Sources */,
+				AE5B47F825D7291900708C9F /* SearchViewController.swift in Sources */,
 				AE6BA135258186380021AE04 /* Keys.swift in Sources */,
 				AE6BA0F3258185190021AE04 /* ViewController.swift in Sources */,
 				AE6BA0EF258185190021AE04 /* AppDelegate.swift in Sources */,
