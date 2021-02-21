@@ -62,7 +62,7 @@ class ViewController: UIViewController {
         
         movieTableView.delegate = self
         movieTableView.dataSource = self
-        movieTableView.rowHeight = 140
+        movieTableView.rowHeight = 200
         movieTableView.register(MovieTableViewCell.self, forCellReuseIdentifier: "MovieCell")
     }
     

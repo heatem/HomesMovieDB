@@ -27,14 +27,14 @@ class MovieView: UIView {
     let releaseDateLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        label.textAlignment = .center
+        label.textAlignment = .left
         return label
     }()
 
     let voteLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        label.textAlignment = .center
+        label.textAlignment = .left
         return label
     }()
 
@@ -45,6 +45,8 @@ class MovieView: UIView {
         return label
     }()
     
+    let saveButton = SaveButton()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -52,6 +54,7 @@ class MovieView: UIView {
         
         addSubview(imageView)
         addSubview(titleLabel)
+        addSubview(saveButton)
         addSubview(releaseDateLabel)
         addSubview(voteLabel)
         addSubview(overviewLabel)
@@ -76,17 +79,21 @@ class MovieView: UIView {
         titleLabel.widthAnchor.constraint(equalTo: widthAnchor, constant: -32).isActive = true
         titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
         titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16).isActive = true
+        
+        saveButton.translatesAutoresizingMaskIntoConstraints = false
+        saveButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
+        saveButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16).isActive = true
+        saveButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        saveButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
 
         releaseDateLabel.translatesAutoresizingMaskIntoConstraints = false
         releaseDateLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
-        releaseDateLabel.widthAnchor.constraint(equalTo: widthAnchor, constant: -32).isActive = true
-        releaseDateLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
+        releaseDateLabel.trailingAnchor.constraint(equalTo: saveButton.leadingAnchor, constant: -16).isActive = true
         releaseDateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16).isActive = true
 
         voteLabel.translatesAutoresizingMaskIntoConstraints = false
         voteLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
-        voteLabel.widthAnchor.constraint(equalTo: widthAnchor, constant: -32).isActive = true
-        voteLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
+        voteLabel.trailingAnchor.constraint(equalTo: saveButton.leadingAnchor, constant: -16).isActive = true
         voteLabel.topAnchor.constraint(equalTo: releaseDateLabel.bottomAnchor, constant: 8).isActive = true
 
         overviewLabel.translatesAutoresizingMaskIntoConstraints = false
