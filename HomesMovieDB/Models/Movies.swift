@@ -18,4 +18,5 @@ struct Movie: Codable, Identifiable {
     let release_date: String?
     let poster_path: String?
     let vote_average: Double?
+    let isSaved: Bool = false
 }
